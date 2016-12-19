@@ -1,11 +1,12 @@
 # JavaAutoDeployClient
 java auto deploy
 
+
+dowload [JavaAutoDeployClient-1.0.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.0/JavaAutoDeployClient-1.0.jar?raw=true)
+
 # useage
 
 ### use bat way
-
-dowload [JavaAutoDeployClient-1.0.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.0/JavaAutoDeployClient-1.0.jar)
 
 - create config.xml
 
@@ -124,5 +125,23 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
 
     }
 
+
+```
+
+- maven package demo
+
+#### maven-package.bat
+
+```
+mvn clean package -Pprod
+
+```
+
+#### autodeploy.bat
+
+```
+call maven-package.bat
+pause
+java -jar JavaAutoDeployClient.jar config.xml
 
 ```
