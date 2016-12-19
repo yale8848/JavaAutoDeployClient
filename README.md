@@ -1,5 +1,6 @@
 # JavaAutoDeployClient
-java auto deploy
+
+java auto deploy with ssh protcol
 
 
 dowload [JavaAutoDeployClient-1.0.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.0/JavaAutoDeployClient-1.0.jar?raw=true)
@@ -67,7 +68,7 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
 
 ```
 
-- upload war to tomcat demo
+- upload war to tomcat demo config.xml
 
 ```
 <?xml version="1.0" encoding="utf-8" ?>
@@ -81,8 +82,8 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
             <password>123456</password>
             <uploads>
                 <upload>
-                    <local>C:\test.war</local>
-                    <remote>/home/tomcat</remote>
+                    <local>C:\javawebdeploy.war</local>
+                    <remote>/coder/tomcat/apache-tomcat-7.0.55/webapps</remote>
                 </upload>
             </uploads>
             <commands>
@@ -130,12 +131,6 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
 
 - maven package demo
 
-#### maven-package.bat
-
-```
-mvn clean package -Pprod
-
-```
 
 #### autodeploy.bat
 
@@ -145,3 +140,11 @@ pause
 java -jar JavaAutoDeployClient.jar config.xml
 
 ```
+
+#### maven-package.bat
+
+```
+mvn clean package -Pprod
+
+```
+
