@@ -1,11 +1,11 @@
 # JavaAutoDeployClient
 
-java auto deploy with ssh protcol
+java auto deploy client with ssh protocol
 
 
 dowload [JavaAutoDeployClient-1.0.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.0/JavaAutoDeployClient-1.0.jar?raw=true)
 
-# useage
+# usage
 
 ### use bat way
 
