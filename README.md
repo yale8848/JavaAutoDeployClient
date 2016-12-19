@@ -3,7 +3,9 @@ java auto deploy
 
 # useage
 
-### use bat 
+### use bat way
+
+dowload [JavaAutoDeployClient-1.0.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.0/JavaAutoDeployClient-1.0.jar)
 
 - create config.xml
 
@@ -91,9 +93,12 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
     </servers>
 </config>
 
-### use code
+
 
 ```
+
+
+### use code way
 
 - code demo
 
