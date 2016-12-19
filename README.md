@@ -99,6 +99,25 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
 
 ```
 
+- maven package demo
+
+
+autodeploy.bat
+
+```
+call maven-package.bat
+pause
+java -jar JavaAutoDeployClient-1.0.jar config.xml
+
+```
+
+maven-package.bat
+
+```
+mvn clean package -Pprod
+
+```
+
 
 ### use code way
 
@@ -129,22 +148,6 @@ java -jar JavaAutoDeployClient-1.0.jar config.xml
 
 ```
 
-- maven package demo
 
 
-#### autodeploy.bat
-
-```
-call maven-package.bat
-pause
-java -jar JavaAutoDeployClient.jar config.xml
-
-```
-
-#### maven-package.bat
-
-```
-mvn clean package -Pprod
-
-```
 
