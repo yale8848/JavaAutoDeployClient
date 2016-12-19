@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--use ssh user password-->
+<config>
+    <threadPoolSize default="5">3</threadPoolSize>
+    <servers>
+        <server>
+            <host>192.168.0.1</host>
+            <userName>root</userName>
+            <password>123456</password>
+            <uploads>
+                <upload>
+                    <local>C:\test.jar</local>
+                    <remote>/home</remote>
+                </upload>
+            </uploads>
+            <commands>
+                <command>/home/restart.sh</command>
+            </commands>
+        </server>
+
+        <server>
+            <host>192.168.0.2</host>
+            <userName>root</userName>
+            <password>123456</password>
+            <uploads>
+                <upload>
+                    <local>C:\test.jar</local>
+                    <remote>/home</remote>
+                </upload>
+                <upload>
+                    <local>C:\test2.jar</local>
+                    <remote>/home</remote>
+                </upload>
+            </uploads>
+            <commands>
+                <command>/home/restart.sh</command>
+                <command>/home/restart2.sh</command>
+            </commands>
+        </server>
+
+    </servers>
+
+</config>
