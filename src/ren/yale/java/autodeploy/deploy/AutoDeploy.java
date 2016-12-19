@@ -64,6 +64,7 @@ public class AutoDeploy implements IAutoDeployAction {
 
     @Override
     public void connect() throws Exception {
+        logUtils.d(host+" : try to connect");
         conn = new Connection(host);
         conn.connect();
         boolean isAuthenticated = conn.authenticateWithPassword(usrName, password);
