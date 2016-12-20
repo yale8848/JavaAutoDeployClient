@@ -16,6 +16,9 @@
             <commands>
                 <command>/home/restart.sh</command>
             </commands>
+            <verify>
+                <httpapi default="get" method="get" url=""/>
+            </verify>
         </server>
 
         <server>
@@ -36,6 +39,13 @@
                 <command>/home/restart.sh</command>
                 <command>/home/restart2.sh</command>
             </commands>
+            <verify>
+                <httpapi method="get" url=""/>
+                <httpapi method="post" url="">
+                    <param key="aab"></param>
+                    <param key="bbb"></param>
+                </httpapi>
+            </verify>
         </server>
 
     </servers>

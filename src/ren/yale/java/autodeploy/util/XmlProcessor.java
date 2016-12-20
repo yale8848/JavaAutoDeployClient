@@ -69,6 +69,24 @@ public enum XmlProcessor {
 
     }
 
+    private List<String> getVerifyList(Node verify){
+        List<String> list = new ArrayList<String>();
+
+        NodeList nodeList = verify.getChildNodes();
+
+        for (int i =0;i<nodeList.getLength();i++){
+            Node up =  nodeList.item(i);
+            if(up.getNodeType()==Node.ELEMENT_NODE){
+
+                if (up.getNodeName().equals("command")){
+                    list.add(up.getTextContent());
+                }
+            }
+        }
+
+        return list;
+    }
+
     private List<String> getCommandsList(Node commands){
         List<String> list = new ArrayList<String>();
 
@@ -82,9 +100,6 @@ public enum XmlProcessor {
                     list.add(up.getTextContent());
                 }
             }
-
-
-
         }
 
         return list;
@@ -142,6 +157,9 @@ public enum XmlProcessor {
                         uploadMap = getUploadInfo(ns);
 
                     } else if(ns.getNodeName().equals("commands")){
+
+                        commands = getCommandsList(ns);
+                    }else if(ns.getNodeName().equals("verify")){
 
                         commands = getCommandsList(ns);
                     }
