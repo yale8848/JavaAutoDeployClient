@@ -8,5 +8,6 @@ public interface IAutoDeployAction {
     void upload()throws Exception;
     void download()throws Exception;
     void command()throws Exception;
+    void verifyApi() throws Exception;
     void close()throws Exception;
 }

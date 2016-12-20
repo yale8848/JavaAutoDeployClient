@@ -1,5 +1,7 @@
 package ren.yale.java.autodeploy.deploy;
 
+import ren.yale.java.autodeploy.http.HttpMethod;
+
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,10 @@ public class AutoDeplyBuilder {
         builder.setCommands(commandList);
         return this;
     }
+    public AutoDeplyBuilder setVerifyApi(List<HttpMethod> apis) {
+        builder.setVerifyApi(apis);
+        return this;
+    }
     public AutoDeploy build(){
 
         return builder.getAutoDeploy();
@@ -56,6 +62,12 @@ public class AutoDeplyBuilder {
         public void setCommands(List<String> commandList) {
             autoDeploy.setCommands(commandList);
         }
+
+        @Override
+        public void setVerifyApi(List<HttpMethod> apis) {
+            autoDeploy.setVerifyApi(apis);
+        }
+
         public AutoDeploy getAutoDeploy(){
             return autoDeploy;
         }

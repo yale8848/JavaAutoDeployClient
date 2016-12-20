@@ -5,6 +5,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ren.yale.java.autodeploy.deploy.AutoDeploy;
 import ren.yale.java.autodeploy.deploy.AutoDeplyBuilder;
+import ren.yale.java.autodeploy.http.HttpGet;
+import ren.yale.java.autodeploy.http.HttpMethod;
+import ren.yale.java.autodeploy.http.HttpPost;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -69,8 +72,8 @@ public enum XmlProcessor {
 
     }
 
-    private List<String> getVerifyList(Node verify){
-        List<String> list = new ArrayList<String>();
+    private List<HttpMethod> getVerifyList(Node verify){
+        List<HttpMethod> list = new ArrayList<HttpMethod>();
 
         NodeList nodeList = verify.getChildNodes();
 
@@ -78,8 +81,59 @@ public enum XmlProcessor {
             Node up =  nodeList.item(i);
             if(up.getNodeType()==Node.ELEMENT_NODE){
 
-                if (up.getNodeName().equals("command")){
-                    list.add(up.getTextContent());
+                if (up.getNodeName().equals("httpapi")){
+                    Node n = up.getAttributes().getNamedItem("url");
+                    if (n==null){
+                        continue;
+                    }
+                    String url = n.getTextContent();
+
+                    if (url==null||url.trim().length()==0){
+                        continue;
+                    }
+                    Map<String,String> map = new HashMap<String,String>();
+                    String method="get";
+                    n = up.getAttributes().getNamedItem("method");
+                    if (n!=null){
+                        if (n.getTextContent().length()>0){
+                            method =  n.getTextContent();
+                        }
+                    }
+                    NodeList ns = up.getChildNodes();
+                    for (int j = 0;j<ns.getLength();j++){
+
+                        if (ns.item(j).getNodeType() == Node.ELEMENT_NODE&&
+                                ns.item(j).getNodeName().equals("param")){
+
+                            Node k = ns.item(j).getAttributes().getNamedItem("key");
+
+                            if (k!=null&&k.getTextContent().length()>0&&ns.item(j).getTextContent().length()>0){
+                                map.put(k.getTextContent(),ns.item(j).getTextContent());
+                            }
+                        }
+                    }
+
+                    if (method.toLowerCase().trim().equals("get")){
+
+                        HttpGet httpGet = new HttpGet();
+
+                        httpGet.setUrl(url);
+
+                        list.add(httpGet);
+
+
+                    }else if (method.toLowerCase().trim().equals("post")){
+
+                        HttpPost httpPost = new HttpPost();
+                        httpPost.setUrl(url);
+                        httpPost.setParams(map);
+
+                        list.add(httpPost);
+
+                    }
+
+
+
                 }
             }
         }
@@ -139,6 +193,8 @@ public enum XmlProcessor {
             Map<String,String> uploadMap = new HashMap<String,String>();
             List<String> commands = new ArrayList<String>();
 
+            List<HttpMethod> apis = null;
+
             for (int j=0;j<server.getLength();j++){
                 Node ns = server.item(j);
 
@@ -161,7 +217,7 @@ public enum XmlProcessor {
                         commands = getCommandsList(ns);
                     }else if(ns.getNodeName().equals("verify")){
 
-                        commands = getCommandsList(ns);
+                        apis = getVerifyList(ns);
                     }
                 }
 
@@ -171,6 +227,7 @@ public enum XmlProcessor {
             AutoDeploy autoDeploy = AutoDeplyBuilder.create().
                     setServerInfo(host,userName,password).
                     setUploadFileInfo(uploadMap).
+                    setVerifyApi(apis).
                     setCommands(commands).build();
 
             autoDeployList.add(autoDeploy);

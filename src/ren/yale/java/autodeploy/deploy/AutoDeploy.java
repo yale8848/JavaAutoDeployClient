@@ -5,6 +5,7 @@ import ch.ethz.ssh2.SCPClient;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
 import ch.ethz.ssh2.util.SCPClientTransformListener;
+import ren.yale.java.autodeploy.http.HttpMethod;
 import ren.yale.java.autodeploy.util.LogUtils;
 
 import java.io.*;
@@ -22,7 +23,7 @@ public class AutoDeploy implements IAutoDeployAction {
     String password;
     Map<String,String> mapUpload;
     List<String> commandList;
-
+    List<HttpMethod> apis;
     Connection conn;
 
     LogUtils logUtils = LogUtils.create();
@@ -50,6 +51,9 @@ public class AutoDeploy implements IAutoDeployAction {
     public void setCommands(List<String> commandList) {
         this.commandList=commandList;
 
+    }
+    public void setVerifyApi(List<HttpMethod> apis){
+        this.apis = apis;
     }
     public void start() throws Exception{
         startTime = System.currentTimeMillis();
@@ -133,6 +137,11 @@ public class AutoDeploy implements IAutoDeployAction {
             session.execCommand(c);
             stoutInfo(session,c);
         }
+    }
+
+    @Override
+    public void verifyApi() throws Exception {
+        if (apis==null||apis.size()==0)return;
     }
 
     @Override

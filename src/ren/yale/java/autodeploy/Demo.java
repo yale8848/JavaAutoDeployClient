@@ -2,6 +2,7 @@ package ren.yale.java.autodeploy;
 
 import ren.yale.java.autodeploy.deploy.AutoDeploy;
 import ren.yale.java.autodeploy.deploy.AutoDeplyBuilder;
+import ren.yale.java.autodeploy.util.XmlProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class Demo {
 
     public static void main(String args[]){
+
 
         Map<String,String> uploadMap = new HashMap<String,String>();
         uploadMap.put("c:\\test.jar","/home");
