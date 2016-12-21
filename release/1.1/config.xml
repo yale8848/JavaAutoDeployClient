@@ -16,9 +16,11 @@
             <commands>
                 <command>/home/restart.sh</command>
             </commands>
-            <verify>
 
+            <verify requestCount="51" timeDelay="20000" timeGap="2000">
+                <httpapi method="get" url="http://xxx/app/info"/>
             </verify>
+
         </server>
 
         <server>
@@ -39,6 +41,14 @@
                 <command>/home/restart.sh</command>
                 <command>/home/restart2.sh</command>
             </commands>
+
+            <verify requestCount="51" timeDelay="20000" timeGap="2000">
+                <httpapi method="get" url="http://xxx/app/info"/>
+                <httpapi method="post" url="http://xxx/test/testPost">
+                    <param key="aaa">000</param>
+                    <param key="bbb">111</param>
+                </httpapi>
+            </verify>
 
         </server>
 

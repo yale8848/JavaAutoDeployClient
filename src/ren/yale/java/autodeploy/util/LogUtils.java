@@ -57,9 +57,6 @@ public class  LogUtils {
 
     public void finish(){
 
-
-
-        d("");
         d("=====================================");
         d(connectInfo);
         d(uploadInfo);
@@ -68,7 +65,7 @@ public class  LogUtils {
         }
         d("time used :"+timeFormat(usedTime));
         d("=====================================");
-        d("");
+
     }
 
     public static void d(String text){

@@ -5,12 +5,14 @@ import ch.ethz.ssh2.SCPClient;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
 import ch.ethz.ssh2.util.SCPClientTransformListener;
+import ren.yale.java.autodeploy.Main;
+import ren.yale.java.autodeploy.http.HttpGet;
 import ren.yale.java.autodeploy.http.HttpMethod;
+import ren.yale.java.autodeploy.http.HttpPost;
 import ren.yale.java.autodeploy.util.LogUtils;
 
 import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yale on 2016/12/17.
@@ -28,12 +30,12 @@ public class AutoDeploy implements IAutoDeployAction {
 
     LogUtils logUtils = LogUtils.create();
 
-    boolean isFinished = false;
+    AutoDeployListener autoDeployListener;
 
-    long startTime=0;
+    boolean isFinish=false;
 
-    public boolean isFinished() {
-        return isFinished;
+    public boolean isFinish() {
+        return isFinish;
     }
 
 
@@ -55,14 +57,16 @@ public class AutoDeploy implements IAutoDeployAction {
     public void setVerifyApi(List<HttpMethod> apis){
         this.apis = apis;
     }
-    public void start() throws Exception{
-        startTime = System.currentTimeMillis();
+    public void start(AutoDeploy.AutoDeployListener autoDeployListener) throws Exception{
+        this.autoDeployListener =autoDeployListener;
+         long  startTime = System.currentTimeMillis();
         connect();
         upload();
         download();
         command();
-        close();
         logUtils.setUsedTime((int) (System.currentTimeMillis()-startTime));
+        close();
+
     }
 
 
@@ -142,11 +146,82 @@ public class AutoDeploy implements IAutoDeployAction {
     @Override
     public void verifyApi() throws Exception {
         if (apis==null||apis.size()==0)return;
+
+        for (HttpMethod http:apis) {
+            LogUtils.d("after "+http.timeDelay/1000+" seconds verify api :"+http.getUrl());
+        }
+
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                verify();
+            }
+        },apis.get(0).timeDelay);
+
+    }
+
+    private void verify(){
+
+        List<String> logList = new ArrayList<String>();
+        for(int i = 0;i<apis.get(0).requestCount;i++){
+            boolean success =true;
+            logList.clear();
+            for (HttpMethod http:apis) {
+                String ret = http.execute();
+                String method = "get";
+                String parmas ="";
+                if (http instanceof HttpPost){
+                    method ="post";
+                    HttpPost p = (HttpPost) http;
+
+                    StringBuffer sb = new StringBuffer();
+                    if (p.getParams()!=null){
+
+                        for (Map.Entry<String,String> le:p.getParams().entrySet()){
+                            sb.append(le.getKey());
+                            sb.append("=");
+                            sb.append(le.getValue());
+                            sb.append("&");
+                        }
+                        if (sb.length()>0){
+                            sb.deleteCharAt(sb.length()-1);
+                        }
+                        parmas = sb.toString();
+                    }
+                }
+                String log = "verify : "+http.getUrl()+" "+method+" "+parmas+"  result : "+(ret.length() ==0?"失败":ret);
+                if (ret.length() == 0){
+                    success =false;
+                }else{
+                    logList.add(log);
+                }
+                LogUtils.d(log);
+            }
+
+            if (success){
+                autoDeployListener.verifySucess(logList);
+                break;
+            }
+
+            try {
+                Thread.sleep(apis.get(0).timeGap);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void close()throws Exception {
         conn.close();
-        isFinished = true;
+        isFinish = true;
+        autoDeployListener.finish();
     }
+
+    public interface AutoDeployListener{
+        void finish();
+        void verifySucess(List<String> log);
+    }
+
 }

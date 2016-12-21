@@ -71,9 +71,45 @@ public enum XmlProcessor {
         return map;
 
     }
+    private String getNodeAttrString(Node n,String attrName){
 
+        Node attr = n.getAttributes().getNamedItem(attrName);
+        if (attr!=null){
+            String v =  attr.getTextContent().trim();
+            if (v != null){
+                return v;
+            }
+        }
+        return "";
+    }
+    private int getNodeAttrInt(Node n,String attrName){
+
+        String v = getNodeAttrString(n,attrName);
+        if (v!=null&&v.length() > 0){
+            try{
+                return Integer.parseInt(v);
+            }catch (Exception e){
+            }
+        }
+        return -1;
+
+    }
+
+    private void setVerifyAttrValue(Node verify,HttpMethod httpMethod){
+
+        if (getNodeAttrInt(verify,"requestCount")!=-1){
+            httpMethod.requestCount = getNodeAttrInt(verify,"requestCount");
+        }
+        if (getNodeAttrInt(verify,"timeDelay")!=-1){
+            httpMethod.timeDelay = getNodeAttrInt(verify,"timeDelay");
+        }
+        if (getNodeAttrInt(verify,"timeGap")!=-1){
+            httpMethod.timeGap = getNodeAttrInt(verify,"timeGap");
+        }
+    }
     private List<HttpMethod> getVerifyList(Node verify){
         List<HttpMethod> list = new ArrayList<HttpMethod>();
+
 
         NodeList nodeList = verify.getChildNodes();
 
@@ -82,23 +118,16 @@ public enum XmlProcessor {
             if(up.getNodeType()==Node.ELEMENT_NODE){
 
                 if (up.getNodeName().equals("httpapi")){
-                    Node n = up.getAttributes().getNamedItem("url");
-                    if (n==null){
-                        continue;
-                    }
-                    String url = n.getTextContent();
-
-                    if (url==null||url.trim().length()==0){
+                    String url = getNodeAttrString(up,"url");
+                    if (url.length()==0){
                         continue;
                     }
                     Map<String,String> map = new HashMap<String,String>();
                     String method="get";
-                    n = up.getAttributes().getNamedItem("method");
-                    if (n!=null){
-                        if (n.getTextContent().length()>0){
-                            method =  n.getTextContent();
-                        }
+                    if (getNodeAttrString(up,"method").length()>0){
+                        method =  getNodeAttrString(up,"method");
                     }
+
                     NodeList ns = up.getChildNodes();
                     for (int j = 0;j<ns.getLength();j++){
 
@@ -117,6 +146,7 @@ public enum XmlProcessor {
 
                         HttpGet httpGet = new HttpGet();
 
+                        setVerifyAttrValue(verify,httpGet);
                         httpGet.setUrl(url);
 
                         list.add(httpGet);
@@ -127,7 +157,7 @@ public enum XmlProcessor {
                         HttpPost httpPost = new HttpPost();
                         httpPost.setUrl(url);
                         httpPost.setParams(map);
-
+                        setVerifyAttrValue(verify,httpPost);
                         list.add(httpPost);
 
                     }

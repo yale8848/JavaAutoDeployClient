@@ -23,8 +23,8 @@ public class HttpClient {
         try{
             URL u = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(10000);
 
             connection.connect();
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(),"utf-8"));
@@ -47,8 +47,8 @@ public class HttpClient {
             URL u = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) u.openConnection();
 
-            connection.setReadTimeout(5000);
-            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(10000);
 
             connection.setDoInput(true);
             connection.setDoOutput(true);

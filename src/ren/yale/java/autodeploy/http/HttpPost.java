@@ -9,7 +9,7 @@ import java.util.Map;
 public class HttpPost extends HttpMethod {
 
 
-    Map map;
+    Map<String,String> map;
     @Override
     public String execute() {
         return HttpClient.post(mUrl,map);
@@ -21,7 +21,11 @@ public class HttpPost extends HttpMethod {
         mUrl = url;
     }
 
-    public void setParams(Map params){
+    public void setParams(Map<String,String> params){
         map = params;
+    }
+
+    public Map<String,String> getParams(){
+        return map;
     }
 }
