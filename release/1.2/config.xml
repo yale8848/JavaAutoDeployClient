@@ -4,7 +4,7 @@
     <threadPoolSize default="5">3</threadPoolSize>
     <servers>
         <server>
-            <host>192.168.0.1</host>
+            <host>192.168.0.1,192.168.0.3</host>
             <userName>root</userName>
             <password>123456</password>
             <uploads>
