@@ -17,7 +17,8 @@ import java.util.*;
 /**
  * Created by Yale on 2016/12/17.
  */
-public class AutoDeploy implements IAutoDeployAction {
+public class AutoDeploy implements IAutoDeployAction{
+
 
 
     String host;
@@ -222,6 +223,21 @@ public class AutoDeploy implements IAutoDeployAction {
     public interface AutoDeployListener{
         void finish();
         void verifySucess(List<String> log);
+    }
+
+    public AutoDeploy colne() throws Exception {
+
+        ByteArrayOutputStream byteArrayOutputStream =  new ByteArrayOutputStream();
+        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
+
+        outputStream.writeObject(this);
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+
+        return (AutoDeploy) objectInputStream.readObject();
+
     }
 
 }

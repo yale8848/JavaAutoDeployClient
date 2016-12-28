@@ -253,15 +253,27 @@ public enum XmlProcessor {
 
             }
 
+            String[] hosts = host.split(",");
+            if (hosts!=null&&hosts.length>1){
+                for (String h:hosts) {
+                    if (h.length()>0){
+                        AutoDeploy autoDeploy = AutoDeplyBuilder.create().
+                                setServerInfo(h,userName,password).
+                                setUploadFileInfo(uploadMap).
+                                setVerifyApi(apis).
+                                setCommands(commands).build();
+                        autoDeployList.add(autoDeploy);
+                    }
 
-            AutoDeploy autoDeploy = AutoDeplyBuilder.create().
-                    setServerInfo(host,userName,password).
-                    setUploadFileInfo(uploadMap).
-                    setVerifyApi(apis).
-                    setCommands(commands).build();
-
-            autoDeployList.add(autoDeploy);
-
+                }
+            }else{
+                AutoDeploy autoDeploy = AutoDeplyBuilder.create().
+                        setServerInfo(host,userName,password).
+                        setUploadFileInfo(uploadMap).
+                        setVerifyApi(apis).
+                        setCommands(commands).build();
+                autoDeployList.add(autoDeploy);
+            }
         }
 
         return this;

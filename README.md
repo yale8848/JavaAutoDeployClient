@@ -3,7 +3,7 @@
 java一键自动部署war包，jar包工具
 
 
-dowload [JavaAutoDeployClient-1.1.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.1/JavaAutoDeployClient-1.1.jar?raw=true)
+dowload [JavaAutoDeployClient-1.2.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.2/JavaAutoDeployClient-1.2.jar?raw=true)
 
 # 用法
 
@@ -18,7 +18,7 @@ dowload [JavaAutoDeployClient-1.1.jar](https://github.com/yale8848/JavaAutoDeplo
     <threadPoolSize default="5">3</threadPoolSize><!--线程池大小，如果上传服务器多的话可以调大，默认5个线程-->
     <servers>
         <server>
-            <host>192.168.0.1</host><!--远程服务器地址-->
+            <host>192.168.0.1,192.168.0.3</host><!--远程服务器地址,多个用逗号隔开，要求其它配置必须一样-->
             <userName>root</userName><!--ssh登录名称-->
             <password>123456</password><!--ssh登录密码-->
             <uploads>
