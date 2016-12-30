@@ -63,7 +63,7 @@ public class AutoDeploy implements IAutoDeployAction{
     public void start(AutoDeploy.AutoDeployListener autoDeployListener) throws Exception{
         this.autoDeployListener =autoDeployListener;
          long  startTime = System.currentTimeMillis();
-        zipDir();
+
         connect();
         upload();
         download();
