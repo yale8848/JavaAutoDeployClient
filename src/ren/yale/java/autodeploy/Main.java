@@ -13,22 +13,7 @@ public class Main {
 
     public static void main(String args[]){
 
-
-        String path = "G:\\tmp\\test\\aaa";
-
-        String d = FileUtils.getZipName(path);
-
-        String dest = path+".zip";
-        try {
-            FileUtils.zipDir(path,dest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return;
-
-/*        if (args.length == 0){
+        if (args.length == 0){
             LogUtils.d("try to load config.xml");
             try {
                 AutoDeployManager.SELF.loadXML("config.xml").start();
@@ -42,7 +27,7 @@ public class Main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
     }
 }
