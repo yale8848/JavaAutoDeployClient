@@ -9,10 +9,12 @@ import ren.yale.java.autodeploy.Main;
 import ren.yale.java.autodeploy.http.HttpGet;
 import ren.yale.java.autodeploy.http.HttpMethod;
 import ren.yale.java.autodeploy.http.HttpPost;
+import ren.yale.java.autodeploy.util.FileUtils;
 import ren.yale.java.autodeploy.util.LogUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Yale on 2016/12/17.
@@ -61,6 +63,7 @@ public class AutoDeploy implements IAutoDeployAction{
     public void start(AutoDeploy.AutoDeployListener autoDeployListener) throws Exception{
         this.autoDeployListener =autoDeployListener;
          long  startTime = System.currentTimeMillis();
+        zipDir();
         connect();
         upload();
         download();
@@ -68,6 +71,31 @@ public class AutoDeploy implements IAutoDeployAction{
         logUtils.setUsedTime((int) (System.currentTimeMillis()-startTime));
         close();
 
+    }
+    private void zipDir() throws Exception{
+        if (mapUpload==null)return;
+        Map<String,String> dirMap = new HashMap<>();
+        Map<String,String> tmp = new HashMap<>();
+        tmp.putAll(mapUpload);
+        for (Map.Entry<String,String> entry: tmp.entrySet()) {
+            if (FileUtils.isDir(entry.getKey())){
+
+                mapUpload.remove(entry.getKey());
+                logUtils.d(host+" :zip "+entry.getKey());
+                String zn = FileUtils.getZipName(entry.getKey());
+                FileUtils.zipDir(entry.getKey(),zn);
+                dirMap.put(zn,entry.getValue());
+
+                if (commandList==null){
+                    commandList = new ArrayList<String>();
+                }
+                commandList.add("unzip commond");
+            }
+
+        }
+        if (dirMap.size()>0){
+            mapUpload.putAll(dirMap);
+        }
     }
 
 
