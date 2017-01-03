@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--use ssh user password-->
+<config>
+    <threadPoolSize default="5">3</threadPoolSize>
+    <servers>
+        <server>
+            <host>139.129.23.1</host>
+            <userName>root</userName>
+            <password>bcDXH2016</password>
+            <uploads>
+                <upload>
+                    <local>G:\tmp\test\aaa\</local>
+                    <remote>/home/server/test/aaa/</remote>
+                </upload>
+            </uploads>
+            <commands>
+                <command>/home/server/test/test.sh</command>
+            </commands>
+
+        </server>
+
+
+    </servers>
+
+</config>

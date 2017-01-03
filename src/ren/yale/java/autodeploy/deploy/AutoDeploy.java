@@ -11,6 +11,7 @@ import ren.yale.java.autodeploy.http.HttpMethod;
 import ren.yale.java.autodeploy.http.HttpPost;
 import ren.yale.java.autodeploy.util.FileUtils;
 import ren.yale.java.autodeploy.util.LogUtils;
+import ren.yale.java.autodeploy.util.ZipFileUtils;
 
 import java.io.*;
 import java.util.*;
@@ -28,6 +29,7 @@ public class AutoDeploy implements IAutoDeployAction{
     String password;
     Map<String,String> mapUpload;
     List<String> commandList;
+    List<String> zipFileList;
     List<HttpMethod> apis;
     Connection conn;
 
@@ -62,8 +64,8 @@ public class AutoDeploy implements IAutoDeployAction{
     }
     public void start(AutoDeploy.AutoDeployListener autoDeployListener) throws Exception{
         this.autoDeployListener =autoDeployListener;
-         long  startTime = System.currentTimeMillis();
-
+        long  startTime = System.currentTimeMillis();
+        zipDir();
         connect();
         upload();
         download();
@@ -72,24 +74,73 @@ public class AutoDeploy implements IAutoDeployAction{
         close();
 
     }
+
+    private String getRemoteParentPath(String remotePath){
+        StringBuffer sbR  = new StringBuffer();
+        sbR.append(remotePath);
+        if (remotePath.endsWith("/")){
+            sbR.deleteCharAt(remotePath.length()-1);
+        }
+
+        String zipPath =sbR.append(".zip").toString();
+
+        int posR = sbR.toString().lastIndexOf('/');
+        if (posR==-1){
+            posR = sbR.toString().lastIndexOf('\\');
+        }
+        return sbR.substring(0,posR+1);
+    }
+
+    private List<String> getZipCommand(String remotePath){
+
+        List<String> commandsList = new ArrayList<String>();
+
+        StringBuffer sbR  = new StringBuffer();
+        sbR.append(remotePath);
+        if (remotePath.endsWith("/")){
+            sbR.deleteCharAt(remotePath.length()-1);
+        }
+
+        String zipPath =sbR.append(".zip").toString();
+
+        int posR = sbR.toString().lastIndexOf('/');
+        if (posR==-1){
+            posR = sbR.toString().lastIndexOf('\\');
+        }
+        String parentPath = sbR.substring(0,posR+1);
+
+        commandsList.add("unzip -q -o "+zipPath +" -d "+parentPath);
+        commandsList.add("rm -f "+zipPath);
+
+        return commandsList;
+
+
+    }
     private void zipDir() throws Exception{
         if (mapUpload==null)return;
         Map<String,String> dirMap = new HashMap<>();
         Map<String,String> tmp = new HashMap<>();
         tmp.putAll(mapUpload);
         for (Map.Entry<String,String> entry: tmp.entrySet()) {
-            if (FileUtils.isDir(entry.getKey())){
+            if (ZipFileUtils.isDir(entry.getKey())){
 
                 mapUpload.remove(entry.getKey());
                 logUtils.d(host+" :zip "+entry.getKey());
-                String zn = FileUtils.getZipName(entry.getKey());
-                FileUtils.zipDir(entry.getKey(),zn);
-                dirMap.put(zn,entry.getValue());
+                String zn = ZipFileUtils.getZipName(entry.getKey(),entry.getValue());
+                ZipFileUtils.zipDir(entry.getKey(),zn);
+                dirMap.put(zn,getRemoteParentPath(entry.getValue()));
+
+                if (zipFileList==null){
+                    zipFileList = new ArrayList<String>();
+                }
+                zipFileList.add(zn);
 
                 if (commandList==null){
                     commandList = new ArrayList<String>();
                 }
-                commandList.add("unzip commond");
+                for (int i = getZipCommand(entry.getValue()).size() -1;i>=0;i--){
+                    commandList.add(0,getZipCommand(entry.getValue()).get(i));
+                }
             }
 
         }
@@ -126,6 +177,7 @@ public class AutoDeploy implements IAutoDeployAction{
                     String log = host+" : " +" upload "+f.getName()+" "+percent+"%";
                     logUtils.setUploadInfo(log);
                     logUtils.d(log);
+
                 }
             });
         }
@@ -241,31 +293,29 @@ public class AutoDeploy implements IAutoDeployAction{
         }
     }
 
+
+    public void deleteZipFiles(){
+        if(zipFileList!=null){
+            for (String zipF : zipFileList){
+                FileUtils.deleteFile(zipF);
+                logUtils.d("delete "+zipF);
+            }
+        }
+    }
     @Override
     public void close()throws Exception {
         conn.close();
+
+        deleteZipFiles();
+
         isFinish = true;
         autoDeployListener.finish();
+
+
     }
 
     public interface AutoDeployListener{
         void finish();
         void verifySucess(List<String> log);
     }
-
-    public AutoDeploy colne() throws Exception {
-
-        ByteArrayOutputStream byteArrayOutputStream =  new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-
-        outputStream.writeObject(this);
-
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-        return (AutoDeploy) objectInputStream.readObject();
-
-    }
-
 }

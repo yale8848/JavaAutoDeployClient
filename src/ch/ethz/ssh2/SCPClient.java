@@ -397,13 +397,6 @@ public class SCPClient
 		}
 	}
 
-	//transform listener
-	//add by yale
-	public void put(String localFile, String remoteTargetDirectory,SCPClientTransformListener listener) throws IOException
-	{
-		scpClientTransformListener = listener;
-		put(new String[] { localFile }, remoteTargetDirectory, "0600");
-	}
 
 	/**
 	 * Copy a local file to a remote directory, uses mode 0600 when creating
@@ -558,6 +551,15 @@ public class SCPClient
 	public void put(String[] localFiles, String remoteTargetDirectory, String mode) throws IOException
 	{
 		put(localFiles, null, remoteTargetDirectory, mode);
+	}
+
+
+	//transform listener
+	//add by yale
+	public void put(String localFile, String remoteTargetDirectory,SCPClientTransformListener listener) throws IOException
+	{
+		scpClientTransformListener = listener;
+		put(new String[] { localFile }, remoteTargetDirectory, "0600");
 	}
 
 	public void put(String[] localFiles, String[] remoteFiles, String remoteTargetDirectory, String mode)

@@ -102,7 +102,7 @@ public enum  AutoDeployManager {
         int logSize = 0;
         for (AutoDeploy a:autoDeployList) {
 
-            if (a.apis.size()>0){
+            if (a.apis!=null&&a.apis.size()>0){
                 logSize++;
             }
         }
