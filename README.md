@@ -3,7 +3,7 @@
 java一键自动部署war包，jar包工具
 
 
-dowload [JavaAutoDeployClient-1.2.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.2/JavaAutoDeployClient-1.2.jar?raw=true)
+dowload [JavaAutoDeployClient-1.3.jar](https://github.com/yale8848/JavaAutoDeployClient/blob/master/release/1.3/JavaAutoDeployClient-1.3.jar?raw=true)
 
 # 用法
 
@@ -23,7 +23,7 @@ dowload [JavaAutoDeployClient-1.2.jar](https://github.com/yale8848/JavaAutoDeplo
             <password>123456</password><!--ssh登录密码-->
             <uploads>
                 <upload>
-                    <local>C:\test.jar</local><!--本地要上传至服务器的文件，可以是相对地址-->
+                    <local>C:\test.jar</local><!--本地要上传至服务器的文件或目录-->
                     <remote>/home</remote><!--服务器目录-->
                 </upload>
             </uploads>
